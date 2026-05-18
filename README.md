@@ -117,3 +117,122 @@ and navigate to the path in the terminal
 
 U can see a page like this in your browser:
 ![img.png](img/img.png)
+
+### 4. Create model
+In app/models.py
+```python 
+class HeartRateRecord(models.Model):
+    time = models.CharField(max_length=8, unique=True, verbose_name='Время записи')
+    heart_rate = models.CharField(verbose_name='Частота сердечных сокращений')
+
+    def __str__(self):
+        return f'{self.time} -> {self.heart_rate} уд/мин.'
+```
+After the changes in app/models.py u have to create migrations for data updates
+```bash
+python manage.py makemigrations
+python manage.py migrate
+```
+
+### 5. Create functions for interaction with database
+In app/view.py
+```python
+
+# data display
+def accept_package(request):
+    time = request.GET.get('time')
+    heart_rate = request.GET.get('rate')
+
+    try: heart_rate = int(heart_rate)
+    except(ValueError, TypeError):
+        return HttpResponse(
+            'Error: Incorrect heart rate recording format',
+            status=400)
+
+    if not check_correct_data(time, heart_rate):
+        return HttpResponse(
+            'Error: Validation or time failure',
+            status=400)
+
+    HeartRateRecord.objects.create(time=time, heart_rate=heart_rate)
+    message = get_motivation_message(heart_rate)
+
+    response_html = f"""
+<div>
+    <div>Время: {time}</div>
+    <div>Частота сердечных сокращений: {heart_rate} уд/мин.</div>
+    <div>'{message}'</div>
+</div>
+"""
+    return HttpResponse(response_html)
+
+
+# data validation 
+def check_correct_data(time: str, rate: int) -> bool:
+    if not time or rate is None:
+        return False
+
+    elif not (30 <= rate <= 250): # для разумных пределов
+        return False
+    else:
+        last_val = HeartRateRecord.objects.order_by('time').last()
+        if last_val and last_val.time >= time :
+            return False
+        return True
+
+# message display 
+def get_motivation_message(heart_rate: int) -> str:
+    if heart_rate >= 100:
+        return 'Осторожно что-то не так! Обратитесь к врачу.'
+    elif 80 <= heart_rate < 100:
+        return 'Осторожно успокойтесь!'
+    elif 60 <= heart_rate < 80:
+        return 'Хороший результат, Вы движетесь в правильном направлении!'
+    else:
+        return 'Главное — быть активным!'
+```
+
+### 6. URL Settings
+In app create urls.py:
+```python
+from django.urls import path
+from . import views
+
+urlpatterns = [
+    path('track/', views.accept_package, name='accept_package'),
+]
+```
+And in mysite/urls.py:
+```python
+from django.contrib import admin
+from django.urls import path, include
+
+urlpatterns = [
+    path('admin/', admin.site.urls),
+    path('', include('app.urls'))
+]
+```
+### 7. Testing
+If u run server at http://127.0.0.1:8000/
+```bash
+python manage.py runserver
+```
+u can see
+![img_1.png](img/img_1.png)
+
+If u go to http://127.0.0.1:8000/track/
+U can see message "Error: Incorrect heart rate recording format"
+![img_2.png](img/img_2.png)
+
+For testing you can add the time and heart rate: 
+http://127.0.0.1:8000/track/?time=09:08:50&rate=80
+
+![img_3.png](img/img_3.png)
+
+http://127.0.0.1:8000/track/?time=09:80:02&rate=72
+
+![img_4.png](img/img_4.png)
+
+But after page updating:
+
+![img_5.png](img/img_5.png)
