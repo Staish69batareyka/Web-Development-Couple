@@ -1,3 +1,5 @@
+from django.http import HttpResponse
+
 # WEB DEVELOPMENT COUPLE
 
 ## Hello! It's a project for WEB DEVELOPMENT COUPLE.
@@ -6,7 +8,7 @@ Just a project for education
 
 ## Laboratory work 1 (02.11.2026)
 <details>
-<summary>CLICK TO SEE THE TASK CONDITION</summary>
+<summary>CLICK HERE TO SEE THE TASK CONDITION</summary>
 
 > ### Задача
 > Вам подвернулся подходящий случай применить полученные знания на практике. 
@@ -236,3 +238,110 @@ http://127.0.0.1:8000/track/?time=09:80:02&rate=72
 But after page updating:
 
 ![img_5.png](img/img_5.png)
+
+### Saved at the commit "laboratory work 1 (02.11.2026)"
+
+## Laboratory work 2 (02.18.2026)
+
+<details>
+    <summary>CLICK HERE TO SEE THE TASK CONDITION</summary>
+
+> **Задание для самостоятельной работы:** Разработка веб-приложения на
+> Django для медицинской клиники "Здоровье+"
+
+
+> **Цель задания:**
+> Закрепить знания о создании и настройке веб-приложений на Django, а также
+> научиться работать с моделями, представлениями и маршрутизацией.
+>
+> **Задание:**
+> Создайте веб-приложение для медицинской клиники "Здоровье+",
+
+> **Функции**
+> 1. Создание проекта и приложения appointments
+> 2. Представлени:
+>   В файле views.py создайте следующие функции заглушки:
+```python
+from django.http import HttpResponse
+
+def appointment_list(request):
+""" Отображает список всех записей на прием. """
+# Заглушка: Возвращаем текстовое сообщение
+    return HttpResponse("Список всех записей на прием.")
+
+def appointment_detail(request, appointment_id):
+""" Отображает детали конкретной записи на прием. """
+# Заглушка: Возвращаем текстовое сообщение с ID записи
+    return HttpResponse(f"Детали записи на прием с ID: {appointment_id}.")
+
+def create_appointment(request):
+""" Форма для создания новой записи на прием. """
+# Заглушка: Возвращаем текстовое сообщение
+    return HttpResponse("Форма для создания новой записи на прием.")
+``` 
+> 3. Маршруты:
+> - В файле urls.py приложения appointments настройте маршруты
+для ваших представлений:
+>   - Главная страница (например, /): отображает приветственное
+сообщение.
+>   - /appointments/: отображает список записей на прием.
+>   - /appointments/<int:pk>/: отображает детали конкретной
+записи.
+>   - /appointments/create/: форма для создания новой записи.
+
+</details>
+
+### 1. Create application "appointments"
+
+```bash
+django-admin startapp appointments
+```
+### 2. Create features appointment_list, appointment_detail, create_appointment
+In appointments/view.py
+```python
+def home(request):
+    return HttpResponse('HELLO WORLD')
+def appointment_list(request):
+    return HttpResponse('List of all appointments')
+
+def appointment_detail(request, appointment_id):
+    return HttpResponse(f'Appointment details with ID: {appointment_id}')
+
+def create_appointment(request):
+    return HttpResponse('Appointment form')
+```
+### 3. URL settings
+Create rotes in application (in appointments/urls.py):
+```python
+urlpatterns = [
+    path('', views.home, name='home'),
+    path('appointments/', views.appointment_list, name='appointment_list'),
+    path('appointments/create/', views.create_appointment, name='create_appointments'),
+    path('appointments/<int:appointment_id>', views.appointment_detail, name='appointment_detail')
+]
+```
+Connecting rotes in mysite/urls.py:
+```python
+urlpatterns = [
+    path('admin/', admin.site.urls),
+    path('', include('appointments.urls'))
+]
+```
+### 4. Testing
+When we start the server in http://127.0.0.1:8000/ :
+
+![img_6.png](img/img_6.png)
+
+But at the http://127.0.0.1:8000/appointments :
+
+![img_7.png](img/img_7.png)
+
+At the http://127.0.0.1:8000/appointments/8 (for example):
+
+![img_8.png](img/img_8.png)
+
+At the http://127.0.0.1:8000/appointments/create :
+
+![img_9.png](img/img_9.png)
+
+### Saved at the commit "laboratory work 2 (02.18.2026)"
