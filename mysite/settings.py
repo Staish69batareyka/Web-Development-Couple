@@ -38,7 +38,9 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     # add application
-    'app'
+    'app',
+    'healthcare',
+    'appointments',
 ]
 
 MIDDLEWARE = [

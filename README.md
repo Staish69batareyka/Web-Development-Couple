@@ -345,3 +345,278 @@ At the http://127.0.0.1:8000/appointments/create :
 ![img_9.png](img/img_9.png)
 
 ### Saved at the commit "laboratory work 2 (02.18.2026)"
+
+## Laboratory work 3 (02.25.2026)
+
+<details>
+    <summary>CLICK HERE TO SEE THE TASK CONDITION</summary>
+
+> **Задание 1** 
+> 
+> _Подключение базы данных_
+> 
+> В вашем Django-проекте создайте приложение healthcare. В файле
+ settings.py настройте подключение к базе данных SQLite. Убедитесь, что
+ файл базы данных будет находиться в корневом каталоге проекта.
+> 
+> 1. Откройте файл settings.py.
+> 2. Найдите секцию DATABASES и измените её следующим образом:
+
+```python 
+DATABASES = {
+    'default': {
+    'ENGINE': 'django.db.backends.sqlite3',
+    'NAME': BASE_DIR / 'db.sqlite3',
+    }
+}
+```
+> **Задание 2**
+> 
+> _Модель Patient_
+> 
+> В файле models.py приложения healthcare создайте модель Patient,
+ которая будет содержать информацию о пациентах. Поля модели:
+> - name — строка (не более 100 символов);
+> - age — целое число;
+> - contact_info — строка (не более 255 символов).
+> 
+> Убедитесь, что все поля являются обязательными для заполнения.
+
+> **Задание 3**
+> 
+> _Модель Doctor_
+> 
+>В файле models.py приложения healthcare создайте модель Doctor,
+которая будет содержать информацию о врачах. Поля модели:
+>
+> - name — строка (не более 100 символов);
+> - specialty — строка (не более 100 символов).
+
+> **Задание 4**
+> 
+> _Связь между Patient и Doctor_
+> 
+> В модели Patient добавьте поле doctor, которое будет ссылаться на
+ модель Doctor. Это создаст связь "многие к одному", где один врач
+ может иметь много пациентов. Убедитесь, что при удалении врача все
+ связанные с ним пациенты также будут удалены.
+
+> **Задание 5**
+> 
+> _Модель MedicalRecord_
+> 
+> Создайте модель MedicalRecord, которая будет содержать информацию о
+ медицинских записях. Поля модели:
+> - record_details — текстовое поле для хранения подробностей
+ медицинской записи.
+> 
+> Свяжите модель MedicalRecord с моделью Patient с помощью отношения
+ "один к одному". Убедитесь, что при удалении пациента его
+ медицинская запись также будет удалена.
+
+> **Задание 6**
+> 
+> _Модель Treatment_
+> 
+> Создайте модель Treatment, которая будет описывать различные виды
+ лечения. Поля модели:
+> - treatment_name — строка (не более 100 символов).
+
+> **Задание 7** 
+> 
+> _Связь между Patient и Treatment_
+> 
+> Создайте промежуточную модель PatientTreatment, которая будет
+ хранить информацию о связи между пациентами и лечением. Поля
+ модели:
+> - patient — связь с моделью Patient (N:1);
+> - treatment — связь с моделью Treatment (N:1);
+> - date_started — дата начала лечения.
+
+> **Задание 8** 
+> 
+> _Использование ManyToManyField_
+> 
+> Вместо промежуточной модели PatientTreatment, измените модель
+Patient, добавив поле treatments, которое будет использовать
+ManyToManyField для связи с моделью Treatment. Убедитесь, что при
+миграции создается промежуточная таблица для хранения связей.
+
+> **Задание 9**
+> 
+> _Дополнительные поля в промежуточной модели_
+> 
+> Создайте промежуточную модель PatientTreatment вручную и добавьте в
+неё дополнительное поле notes для хранения заметок о лечении.
+Убедитесь, что это поле может быть пустым.
+
+>**Задание 10** 
+>
+>_Настройка обратных связей_
+>
+>В модели Doctor добавьте параметр related_name к полю doctor в модели
+Patient, чтобы упростить доступ к пациентам, связанным с врачом.
+Убедитесь, что вы можете получить всех пациентов, связанных с
+конкретным врачом, используя это имя.
+</details>
+
+### 1. Connecting database
+Create application healthcare:
+```bash
+django-admin startapp healthcare
+```
+I didn't have to rewrite the settings in mysite/settings.py, so I left it as is.
+```python
+DATABASES = {
+    'default': {
+        'ENGINE': 'django.db.backends.sqlite3',
+        'NAME': BASE_DIR / 'db.sqlite3',
+    }
+}
+```
+### 2. Create a Patient model
+In appointments/models.py
+```python
+class Patient(models.Model):
+
+    name = models.CharField(max_length=100, verbose_name="Patient's Name")
+    age = models.IntegerField(verbose_name='Patient Age')
+    contact_info = models.CharField(max_length=255, verbose_name="Patient's Contact")
+
+    def __str__(self):
+        return
+```
+### 3. Create a Doctor model
+In appointment/models.py
+```python
+class Doctor(models.Model):
+
+    name = models.CharField(max_length=100, verbose_name="Doctor's Name")
+    speciality = models.CharField(max_length=100, verbose_name="'Doctor's speciality")
+
+    def __str__(self):
+        return
+```
+### 4. Connect a between Patient and Doctor
+In appointment/models.py class Patient
+```python
+# new object 
+doctor = models.ForeignKey(
+    Doctor,
+    on_delete=models.CASCADE
+)
+```
+### 5. Create a MedicalRecord model
+In appointment/models.py
+```python
+class MedicalRecord(models.Model):
+    record_details = models.CharField()
+
+    patient = models.OneToOneField(
+        Patient,
+        on_delete=models.CASCADE
+    )
+
+    def __str__(self):
+        return
+```
+### 6. Create a Treatment model
+In appointment/models.py
+```python
+class Treatment(models.Model):
+    treatment_name = models.CharField(max_length=100)
+
+    def __str__(self):
+        return
+```
+### 7. Connect between Patient and Treatment in PatientTreatment models
+In appointment/models.py
+```python
+class PatientTreatment(models.Model):
+    patient = models.ForeignKey(
+        Patient,
+        on_delete=models.CASCADE
+    )
+    treatment = models.ForeignKey(
+        Treatment,
+        on_delete=models.CASCADE
+    )
+    date_started = models.DateField(auto_now_add=True)
+
+    def __str__(self):
+        return
+```
+### 8. ManyToMany connecting in Patient model
+In appointment/models.py
+```python
+treatment = models.ManyToManyField(
+    Treatment,
+    through='PatientTreatment',
+    verbose_name='Treatment '
+)
+```
+### 9. Additional field "notes' in PatientTreatment
+```python
+notes = models.TextField(null=True, blank=True, verbose_name='notes')
+```
+### 10. Feedback settings in Patient model
+```python
+doctor = models.ForeignKey(
+        Doctor,
+        on_delete=models.CASCADE,
+        related_name='patient' # <= add related_name
+    )
+```
+### 11. Create migrations
+```bash
+python manage.py makemigrations
+python manage.pu migrate
+```
+### 12. Testing
+add app in INSTALLED_APPS in mysite/settings.py :
+```python 
+INSTALLED_APPS = [
+    # add application
+    'app',
+    'healthcare',
+    'appointments',
+]
+```
+I use handle testing in Django Shall
+```bash
+python manage.py shell
+
+from healthcare.models import Doctor,  Patient, Treatment, MedicalRecord, PatientTreatment 
+
+# Doctor Model
+doc = Doctor.objects.create(name='Aboba', speciality='Terapevt')
+print(doc) # -> Aboba
+
+# Patient Model
+pat = Patient.objects.create(name='Patientik', age=40, contact_info='8-800-555-35-35', doctor=doc)
+print(pat) # -> Patientik
+print(pat.doctor) # -> Aboba
+print(doc.patient.all()) # -> <QuerySet [<Patient: Patientik>]>
+
+record = MedicalRecord.objects.create(record_details='literally idc', patient=pat)
+print(record) # -> literally idc
+
+treat = Treatment.objects.create(treatment_name='Lack of brain')
+print(treat) # -> Lack of brain
+
+link = PatientTreatment.objects.create(patient=pat, treatment=treat, notes='Idk broooo')
+print(pat.treatment.all()) # -> <QuerySet [<Treatment: Lack of brain>]>
+
+
+# Delete data
+pat.detele()
+#(3,
+# {'healthcare.MedicalRecord': 1,
+#  'healthcare.PatientTreatment': 1,
+#  'healthcare.Patient': 1})
+
+# Correct! But in Django Shell u can see 'pat', because it's a copy in OMemo
+exit()
+``` 
+
+## Laboratory work 3 (03.04.2026)
