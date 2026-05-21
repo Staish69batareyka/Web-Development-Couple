@@ -1,0 +1,20 @@
+[
+  {
+    "model": "healthcare.doctor",
+    "pk": "1",
+    "fields": {
+      "name": "Bob",
+      "speciality": "surgeon"
+    }
+  },
+  {
+    "model": "healthcare.patient",
+    "pk": "1",
+    "fields": {
+      "name": "Bob",
+      "age": 35,
+      "contact_info": "8-800-555-35-35",
+      "doctor": 1
+    }
+  }
+]

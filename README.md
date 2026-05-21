@@ -619,4 +619,117 @@ pat.detele()
 exit()
 ``` 
 
-## Laboratory work 3 (03.04.2026)
+## Laboratory work 4 (03.04.2026)
+<details>
+    <summary>CLICK HERE TO SEE THE TASK CONDITION</summary>
+
+> **Задание:**
+> 1. Оптимизировать наш код с использованием базовой модели
+> 2. Выполните миграции
+> 3. Создайте фикстуры для приложения
+> 4. Загрузите их в БД
+> 5. Выгрузите их из БД
+</details>
+
+### 1. Optimise code in healthcare/models.py with base model
+```python
+class BaseModelName(models.Model):
+    name = models.CharField(max_length=100)
+    class Meta:
+        abstract = True
+```
+So that we can delete the object 'name' from models.
+For example:
+```python 
+class Treatment(BaseModelName):
+    # treatment_name = models.CharField(max_length=100)
+
+    def __str__(self):
+        return self.name
+```
+### 2. Make migrations
+```bash
+python manage.py makemigrations
+#Was treatment.treatment_name renamed to treatment.name (a CharField)? [y/N] y
+#Migrations for 'healthcare':
+#  healthcare\migrations\0002_rename_treatment_name_treatment_name_and_more.py
+#    ~ Rename field treatment_name on treatment to name
+#    ~ Alter field name on doctor
+#    ~ Alter field name on patient
+python manage.py migrate
+```
+
+### 3. Create fixtures for the application
+Fixtures - .json file containing completed doctor and patient cards. 
+
+Created clinic_data.json at the root next to manage.py:
+```json
+[
+  {
+    "model": "healthcare.doctor",
+    "pk": "1",
+    "fields": {
+      "name": "Bob",
+      "speciality": "surgeon"
+    }
+  },
+  {
+    "model": "healthcare.patient",
+    "pk": "1",
+    "fields": {
+      "name": "Bob",
+      "age": 35,
+      "contact_info": "8-800-555-35-35",
+      "doctor": 1
+    }
+  }
+]
+```
+### 4. Load it in database
+```bash
+python manage.py loaddata clinic_data.json
+# Installed 2 object(s) from 1 fixture(s)
+```
+
+### 5. Testing
+```bash
+python manage.py shell
+Patient.objects.all()
+# <QuerySet [<Patient: Bob>]>
+exit()
+```
+### 6. Export data from database
+(Выгрузить данные)
+```bash
+python -Xutf8 manage.py dumpdata appointments --indent 4 -o backup.json
+```
+in backup.json you can see
+```json
+[
+{
+    "model": "healthcare.doctor",
+    "pk": 1,
+    "fields": {
+        "name": "Bob",
+        "speciality": "surgeon"
+    }
+},
+{
+    "model": "healthcare.treatment",
+    "pk": 1,
+    "fields": {
+        "name": "Lack of brain"
+    }
+},
+{
+    "model": "healthcare.patient",
+    "pk": 1,
+    "fields": {
+        "name": "Bob",
+        "age": 35,
+        "contact_info": "8-800-555-35-35",
+        "doctor": 1
+    }
+}
+]
+```

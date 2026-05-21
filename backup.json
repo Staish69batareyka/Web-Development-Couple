@@ -1,0 +1,27 @@
+[
+{
+    "model": "healthcare.doctor",
+    "pk": 1,
+    "fields": {
+        "name": "Bob",
+        "speciality": "surgeon"
+    }
+},
+{
+    "model": "healthcare.treatment",
+    "pk": 1,
+    "fields": {
+        "name": "Lack of brain"
+    }
+},
+{
+    "model": "healthcare.patient",
+    "pk": 1,
+    "fields": {
+        "name": "Bob",
+        "age": 35,
+        "contact_info": "8-800-555-35-35",
+        "doctor": 1
+    }
+}
+]

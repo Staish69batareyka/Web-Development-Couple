@@ -1,24 +1,28 @@
 from django.db import models
 
-class Doctor(models.Model):
+class BaseModelName(models.Model):
+    name = models.CharField(max_length=100)
+    class Meta:
+        abstract = True
 
-    name = models.CharField(max_length=100, verbose_name="Doctor's Name")
+class Doctor(BaseModelName):
+
+    # name = models.CharField(max_length=100, verbose_name="Doctor's Name")
     speciality = models.CharField(max_length=100, verbose_name="Doctor's Speciality")
-
 
     def __str__(self):
         return self.name
 
-class Treatment(models.Model):
-    treatment_name = models.CharField(max_length=100)
+class Treatment(BaseModelName):
+    # treatment_name = models.CharField(max_length=100)
 
     def __str__(self):
-        return self.treatment_name
+        return self.name
 
 
-class Patient(models.Model):
+class Patient(BaseModelName):
 
-    name = models.CharField(max_length=100, verbose_name="Patient's Name")
+    # name = models.CharField(max_length=100, verbose_name="Patient's Name")
     age = models.IntegerField(verbose_name='Patient Age')
     contact_info = models.CharField(max_length=255, verbose_name="Patient's Contacts")
 
