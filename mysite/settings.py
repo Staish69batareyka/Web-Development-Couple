@@ -27,6 +27,9 @@ DEBUG = True
 
 ALLOWED_HOSTS = []
 
+LOGIN_URL = 'login'
+
+LOGIN_REDIRECT_URL = 'device-create'
 
 # Application definition
 
@@ -41,6 +44,7 @@ INSTALLED_APPS = [
     'app',
     'healthcare',
     'appointments',
+    'LaboratoryWork6',
 ]
 
 MIDDLEWARE = [
