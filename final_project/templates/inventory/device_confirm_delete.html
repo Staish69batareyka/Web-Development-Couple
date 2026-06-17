@@ -1,0 +1,17 @@
+{% extends 'base.html' %}
+{% block content %}
+<h2>Подтверждение удаления</h2>
+{% if error %}
+    <div style="padding: 15px; background: #fde8e8; color: #e74c3c; border-radius: 4px; margin-bottom: 20px;">
+        {{ error }}
+    </div>
+    <a href="{% url 'device-list' %}" class="btn">Вернуться к списку</a>
+{% else %}
+    <p>Вы уверены, что хотите безвозвратно удалить <strong>{{ object.name }}</strong>?</p>
+    <form method="post">
+        {% csrf_token %}
+        <button type="submit" class="btn btn-danger">Да, удалить</button>
+        <a href="{% url 'device-list' %}" class="btn" style="background: gray;">Отмена</a>
+    </form>
+{% endif %}
+{% endblock %}

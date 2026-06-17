@@ -1,0 +1,11 @@
+{% extends 'base.html' %}
+{% block content %}
+<div style="max-width: 400px; margin: auto;">
+    <h2>Регистрация нового инженера</h2>
+    <form method="post">
+        {% csrf_token %}
+        {{ form.as_p }}
+        <button type="submit" class="btn" style="background: #2ecc71;">Создать профиль</button>
+    </form>
+</div>
+{% endblock %}

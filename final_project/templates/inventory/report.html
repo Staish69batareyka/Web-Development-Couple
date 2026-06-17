@@ -1,0 +1,18 @@
+{% extends 'base.html' %}
+{% block content %}
+<h2>Статистика распределения лабораторного фонда</h2>
+<p>Всего зарегистрировано приборов: <strong>{{ total }}</strong></p>
+
+<div style="margin: 30px 0;">
+    {% for row in report_data %}
+    <div class="chart-row">
+        <div class="chart-label">{{ row.status }}</div>
+        <div class="chart-bar-bg">
+            <div class="chart-bar-fill" style="width: {{ row.percentage }}%;"></div>
+        </div>
+        <div style="width: 120px; text-align: right;">{{ row.count }} шт. ({{ row.percentage }}%)</div>
+    </div>
+    {% endfor %}
+</div>
+<a href="{% url 'device-list' %}" class="btn">Вернуться на склад</a>
+{% endblock %}

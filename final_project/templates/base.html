@@ -1,0 +1,212 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <title>{% block title %}Учёт оборудования{% endblock %}</title>
+    <style>
+        :root {
+    /* Новая палитра цветов */
+    --primary-color: #064E3B;       /* Благородный синий для кнопок и акцентов */
+    --primary-hover: #10B981;       /* Темно-синий при наведении */
+    --bg-main: #f4f6f9;             /* Мягкий светлый фон для всей страницы */
+    --bg-card: #ffffff;             /* Белый фон для карточек и форм */
+    --text-main: #2d3748;           /* Темно-серый основной текст (лучше читается, чем чистый черный) */
+    --text-muted: #718096;          /* Серый текст для второстепенных данных */
+    --border-color: #e2e8f0;        /* Аккуратные тонкие границы */
+    --nav-bg: #064E3B;              /* Стильный темный графит для верхнего меню */
+    --nav-text: #ffffff;            /* Белый текст в меню */
+    --success-color: #2f855a;       /* Зеленый для успешных действий/статусов */
+    --danger-color: #c53030;        /* Красный для ошибок/удаления */
+}
+
+/* Сброс базовых отступов */
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+}
+
+body {
+    font-family: 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+    background-color: var(--bg-main);
+    color: var(--text-main);
+    line-height: 1.6;
+}
+
+/* Верхнее навигационное меню (Шапка) */
+nav, .navbar {
+    background-color: var(--nav-bg);
+    padding: 1rem 2rem;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+}
+
+nav a, .navbar a {
+    color: var(--nav-text);
+    text-decoration: none;
+    font-weight: 500;
+    margin-left: 15px;
+    transition: color 0.2s ease;
+}
+
+nav a:hover, .navbar a:hover {
+    color: #cbd5e0;
+}
+
+/* Главный контейнер для контента */
+.container {
+    max-width: 1200px;
+    margin: 40px auto;
+    padding: 0 20px;
+}
+
+/* Стилизация карточек, форм и таблиц */
+.card, .content-box, form {
+    background: var(--bg-card);
+    padding: 30px;
+    border-radius: 8px;
+    box-shadow: 0 4px 6px rgba(160, 174, 192, 0.1);
+    border: 1px solid var(--border-color);
+    margin-bottom: 20px;
+}
+
+/* Заголовки */
+h1, h2, h3 {
+    color: #1a202c;
+    margin-bottom: 20px;
+    font-weight: 600;
+}
+
+/* Стили кнопок */
+.btn, button[type="submit"] {
+    background-color: var(--primary-color);
+    color: white;
+    padding: 10px 20px;
+    border: none;
+    border-radius: 6px;
+    font-size: 14px;
+    font-weight: 500;
+    cursor: pointer;
+    text-decoration: none;
+    display: inline-block;
+    transition: background-color 0.2s ease, transform 0.1s ease;
+}
+
+.btn:hover, button[type="submit"]:hover {
+    background-color: var(--primary-hover);
+}
+
+.btn:active, button[type="submit"]:active {
+    transform: scale(0.98);
+}
+
+/* Второстепенные/серые кнопки */
+.btn-secondary {
+    background-color: #edf2f7;
+    color: #4a5568;
+    border: 1px solid var(--border-color);
+}
+
+.btn-secondary:hover {
+    background-color: #e2e8f0;
+}
+
+/* Красные кнопки (например, для удаления) */
+.btn-danger {
+    background-color: var(--danger-color);
+    color: white;
+}
+.btn-danger:hover {
+    background-color: #9b2c2c;
+}
+
+/* Современный вид полей ввода в формах (включая login.html) */
+input[type="text"],
+input[type="password"],
+input[type="email"],
+input[type="number"],
+select,
+textarea {
+    width: 100%;
+    padding: 10px 12px;
+    margin-top: 6px;
+    margin-bottom: 16px;
+    border: 1px solid var(--border-color);
+    border-radius: 6px;
+    background-color: #fff;
+    color: var(--text-main);
+    font-size: 14px;
+    transition: border-color 0.2s, box-shadow 0.2s;
+}
+
+input:focus, select:focus, textarea:focus {
+    outline: none;
+    border-color: var(--primary-color);
+    box-shadow: 0 0 0 3px rgba(43, 92, 143, 0.15);
+}
+
+/* Красивые таблицы для списков оборудования */
+table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 15px;
+    background: var(--bg-card);
+    border-radius: 8px;
+    overflow: hidden;
+}
+
+th {
+    background-color: #f7fafc;
+    color: #4a5568;
+    text-align: left;
+    padding: 14px 16px;
+    font-weight: 600;
+    border-bottom: 2px solid var(--border-color);
+}
+
+td {
+    padding: 14px 16px;
+    border-bottom: 1px solid var(--border-color);
+    color: var(--text-main);
+}
+
+tr:hover td {
+    background-color: #f8fafc; /* Эффект наведения на строчку таблицы */
+}
+
+/* Стили для ссылок внутри контента */
+a {
+    color: var(--primary-color);
+    text-decoration: none;
+}
+a:hover {
+    text-decoration: underline;
+}
+    </style>
+</head>
+<body>
+<nav>
+    <div>
+        <a href="{% url 'device-list' %}">📦 Склад техники</a>
+        <a href="{% url 'report' %}">📊 Графики/Отчет</a>
+    </div>
+    <div>
+        {% if user.is_authenticated %}
+            <span style="color: #bdc3c7; margin-right: 15px;">👤 {{ user.username }} ({{ user.position }})</span>
+            <form action="{% url 'logout' %}" method="post" style="display:inline;">
+                {% csrf_token %}
+                <button type="submit" class="btn btn-danger" style="padding: 4px 10px;">Выйти</button>
+            </form>
+        {% else %}
+            <a href="{% url 'login' %}">Войти</a>
+            <a href="{% url 'signup' %}" class="btn">Регистрация</a>
+        {% endif %}
+    </div>
+</nav>
+<div class="container">
+    {% block content %}{% endblock %}
+</div>
+</body>
+</html>

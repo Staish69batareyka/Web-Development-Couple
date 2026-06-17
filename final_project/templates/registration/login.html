@@ -1,0 +1,11 @@
+{% extends 'base.html' %}
+{% block content %}
+<div style="max-width: 400px; margin: auto;">
+    <h2>Авторизация сотрудника</h2>
+    <form method="post">
+        {% csrf_token %}
+        {{ form.as_p }}
+        <button type="submit" class="btn">Войти</button>
+    </form>
+</div>
+{% endblock %}

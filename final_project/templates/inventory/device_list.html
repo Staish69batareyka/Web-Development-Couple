@@ -1,0 +1,48 @@
+{% extends 'base.html' %}
+{% block content %}
+<h2>Журнал учета (рабов :3)</h2>
+<p style="color: gray; font-size: 0.85em;">Текущее время сервера: {{ server_time }}</p>
+
+<form method="get" style="margin-bottom: 20px; display: flex; gap: 10px;">
+    <input type="text" name="search" value="{{ request.GET.search }}" placeholder="Поиск по названию..." style="padding: 6px; width: 200px;">
+    <select name="status" style="padding: 6px;">
+        <option value="">-- Все статусы --</option>
+        <option value="active" {% if request.GET.status == 'active' %}selected{% endif %}>В работе</option>
+        <option value="repair" {% if request.GET.status == 'repair' %}selected{% endif %}>Ремонт</option>
+        <option value="retired" {% if request.GET.status == 'retired' %}selected{% endif %}>Списано</option>
+    </select>
+    <button type="submit" class="btn">Найти</button>
+</form>
+
+<a href="{% url 'device-create' %}" class="btn" style="background: #2ecc71;">+ Добавить</a>
+
+<table>
+    <thead>
+        <tr>
+            <th>Наименование</th>
+            <th>Инвентарный номер</th>
+            <th>Текущий статус</th>
+            <th>Дата приобретения</th>
+            <th>Управление</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for device in devices %}
+        <tr>
+            <td><a href="{% url 'device-detail' device.slug %}"><strong>{{ device.name }}</strong></a></td>
+            <td><code>{{ device.inventory_number }}</code></td>
+            <td>{{ device.get_status_display }}</td>
+            <td>{{ device.purchase_date }}</td>
+            <td>
+                <a href="{% url 'device-update' device.slug %}" style="color: #3498db;">Изменить</a> | 
+                <a href="{% url 'device-delete' device.slug %}" style="color: #e74c3c;">Удалить</a>
+            </td>
+        </tr>
+        {% empty %}
+        <tr>
+            <td colspan="5" style="text-align: center; color: gray;">Оборудование по заданным критериям не найдено.</td>
+        </tr>
+        {% endfor %}
+    </tbody>
+</table>
+{% endblock %}

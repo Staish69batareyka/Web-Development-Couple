@@ -1,0 +1,8 @@
+{% extends 'base.html' %}
+{% block content %}
+<h2>Просмотр: {{ device.name }}</h2>
+<p>Инвентарный номер: {{ device.inventory_number }}</p>
+<p>Статус: {{ device.get_status_display }}</p>
+<p>Дата ввода в эксплуатацию: {{ device.purchase_date }}</p>
+<a href="{% url 'device-list' %}" class="btn">Назад к списку</a>
+{% endblock %}
